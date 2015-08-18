@@ -2,21 +2,16 @@
   width: 500px;
 }
 
-.photo-gallery__slides-wrapper {
-  position: relative;
-  width: 2000px;
-  height: 100px;
-}
-
 .photo-gallery__content {
   display: inline-block;
   width: 426px;
   height: 100px;
-  overflow: scroll;
+  overflow: hidden;
 }
 .photo-gallery__slides {
-  width: 2000px;
+  /*width: 2000px;*/
   height: 100px;
+  white-space: nowrap;
 }
 .photo-gallery__slide {
   display: inline-block;

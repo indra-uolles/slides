@@ -26,78 +26,26 @@ $.widget("custom.mygallery", {
 
   _slideNext: function() {
     var $content = this.options.content;
-    var needed = this._neededNextCount();
-    if (needed !== 0) {
-      this._appendNeededNext(needed);
-    }
 
     var value = this._slideValue($content, true);
-    $($content.closest('.photo-gallery__content'))
-      .animate({ scrollLeft: value }, 1000);
-
-    this._updateNextIndex();
+    $content.closest('.photo-gallery__slides')
+      .transition({ x: value }, 1000);
   },
 
   _slidePrev: function() {
     var $content = this.options.content;
-    var needed = this._neededPrevCount();
-    if (needed !== 0) {
-      this._appendNeededPrev(needed);
-    }
-
     var value = this._slideValue($content, false);
-    $($content.closest('.photo-gallery__content'))
-      .animate({ scrollLeft: value }, 1000);
-
-    this._updatePrevIndex();
-  },
-
-  _appendNeededNext: function(needed) {
-    this.options.content.append(this.options.initial.clone());
-  },
-
-  _appendNeededPrev: function(needed) {
-    this.options.content.prepend(this.options.initial.clone());
-  },
-
-  _updatePrevIndex: function() {
-    this.options.prevIndex -= this.options.count;
-    if (this.options.prevIndex < 0) {
-      this.options.prevIndex = this.options.initial.length + this.options.prevIndex;
-    }
-  },
-
-  _updateNextIndex: function() {
-    this.options.nextIndex += this.options.count;
-    this.options.nextIndex = this.options.nextIndex % this.options.initial.length;
-  },
-
-  _neededNextCount: function() {
-    var given = this.options.initial.length;
-    var left = given - (this.options.nextIndex + this.options.count);
-    if (left - this.options.count >= 0) {
-      return 0;
-    } else {
-      return this.options.count - left;
-    }
-  },
-
-  _neededPrevCount: function() {
-    var delta = this.options.prevIndex - this.options.count;
-    if (delta > 0) {
-      return 0;
-    } else {
-      return (this.options.prevIndex - delta);
-    }
+    $content.closest('.photo-gallery__slides')
+      .transition({ x: value }, 1000);
   },
 
   _slideValue: function(element, next) {
     var $slide = $(element.find('.photo-gallery__slide')[0]);
     var slideWidth = $slide.outerWidth(true)*this.options.count;
     if (next == true) {
-      return "+=" + slideWidth + "px";
+      return "-=" + slideWidth;
     } else {
-      return "-=" + slideWidth + "px";
+      return "+=" + slideWidth;
     }
   }
 });
