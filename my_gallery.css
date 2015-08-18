@@ -12,12 +12,11 @@
   display: inline-block;
   width: 426px;
   height: 100px;
-  overflow: hidden;
+  overflow: scroll;
 }
 .photo-gallery__slides {
   width: 2000px;
   height: 100px;
-  position: absolute;
 }
 .photo-gallery__slide {
   display: inline-block;

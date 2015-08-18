@@ -26,29 +26,56 @@ $.widget("custom.mygallery", {
 
   _slideNext: function() {
     var $content = this.options.content;
-    var value = this._slideValue($content, true);
+    var needed = this._neededNextCount();
+    if (needed !== 0) {
+      this._appendNeededNext(needed);
+    }
 
-    $content.animate({
-      left: value
-    });
-    console.log(this._neededNextCount());
+    var value = this._slideValue($content, true);
+    $($content.closest('.photo-gallery__content'))
+      .animate({ scrollLeft: value }, 1000);
+
+    this._updateNextIndex();
   },
 
   _slidePrev: function() {
     var $content = this.options.content;
-    var value = this._slideValue($content, false);
+    var needed = this._neededPrevCount();
+    if (needed !== 0) {
+      this._appendNeededPrev(needed);
+    }
 
-    $content.animate({
-      left: value
-    });
-    console.log(this._neededPrevCount());
+    var value = this._slideValue($content, false);
+    $($content.closest('.photo-gallery__content'))
+      .animate({ scrollLeft: value }, 1000);
+
+    this._updatePrevIndex();
+  },
+
+  _appendNeededNext: function(needed) {
+    this.options.content.append(this.options.initial.clone());
+  },
+
+  _appendNeededPrev: function(needed) {
+    this.options.content.prepend(this.options.initial.clone());
+  },
+
+  _updatePrevIndex: function() {
+
+  },
+
+  _updateNextIndex: function() {
+
   },
 
   _neededNextCount: function() {
     var given = this.options.initial.length;
     var left = given - (this.options.nextIndex + this.options.count);
-    var needed = this.options.count - left;
-    return needed;
+    if (left - this.options.count >= 0) {
+      return 0;
+    } else {
+      return this.options.count - left;
+    }
   },
 
   _neededPrevCount: function() {
@@ -61,14 +88,12 @@ $.widget("custom.mygallery", {
   },
 
   _slideValue: function(element, next) {
-    var left = element.css('left');
-    var initValue = (left == 'auto' ? 0 : parseInt(left.split("px")[0]));
     var $slide = $(element.find('.photo-gallery__slide')[0]);
     var slideWidth = $slide.outerWidth(true)*3;
     if (next == true) {
-      return (initValue - slideWidth) + "px";
+      return "+=" + slideWidth + "px";
     } else {
-      return (initValue + slideWidth) + "px";
+      return "-=" + slideWidth + "px";
     }
   }
 });
