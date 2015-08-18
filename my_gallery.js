@@ -14,10 +14,23 @@ $.widget("custom.mygallery", {
   showNext: function() {
     console.log(this.options.count);
     console.log(this.options.prevIndex);
+    this._slideNext();
     //var initialSlides = this.element.find("[data-initial-slide=true]");
   },
 
   showPrev: function() {
+
+  },
+
+  _slideNext: function() {
+    $content = this.element.find('.photo-gallery__slides');
+
+    $content.animate({
+      left: "-200px"
+    });
+  },
+
+  _slidePrev: function() {
 
   }
 });

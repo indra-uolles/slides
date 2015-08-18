@@ -1,6 +1,13 @@
 .photo-gallery {
   width: 500px;
 }
+
+.photo-gallery__slides-wrapper {
+  position: relative;
+  width: 2000px;
+  height: 100px;
+}
+
 .photo-gallery__content {
   display: inline-block;
   width: 426px;
@@ -10,6 +17,7 @@
 .photo-gallery__slides {
   width: 2000px;
   height: 100px;
+  position: absolute;
 }
 .photo-gallery__slide {
   display: inline-block;
