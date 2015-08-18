@@ -1,16 +1,14 @@
 .photo-gallery {
   width: 500px;
+  height: 96px;
 }
 
 .photo-gallery__content {
   display: inline-block;
   width: 426px;
-  height: 100px;
   overflow: hidden;
 }
 .photo-gallery__slides {
-  /*width: 2000px;*/
-  height: 100px;
   white-space: nowrap;
 }
 .photo-gallery__slide {
@@ -22,14 +20,15 @@
   border: 1px solid #ececec;
   position: relative;
   width: 30px;
-  height: 100px;
   cursor: pointer;
+  height: 100%;
+  vertical-align: top;
   box-sizing: border-box;
 }
 .photo-gallery__prev img, .photo-gallery__next img {
   width: 20px;
   height: 20px;
   position: absolute;
-  top: 40px;
+  top: 50%;
   left: 5px;
 }
