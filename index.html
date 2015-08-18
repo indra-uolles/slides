@@ -9,6 +9,27 @@
         position: relative;
         overflow: hidden;
       }
+      .photo-gallery.is-big .photo-gallery__prev {
+        height: 500px;
+      }
+      .photo-gallery.is-big .photo-gallery__next {
+        height: 500px;
+      }
+      .photo-gallery.is-big .photo-gallery__content {
+        height: 500px;
+      }
+      .photo-gallery.is-big .photo-gallery__slides-wrapper {
+        height: 500px;
+      }
+      .photo-gallery.is-big .photo-gallery__slides {
+        height: 500px;
+      }
+      .photo-gallery.is-big .photo-gallery__prev img {
+        top: 200px;
+      }
+      .photo-gallery.is-big .photo-gallery__next img {
+        top: 200px;
+      }
     </style>
   </head>
   <body>
@@ -31,19 +52,19 @@
       </div>
     </div>
 
-    <div class="photo-gallery">
+    <div class="photo-gallery is-big">
       <div class="photo-gallery__prev">
         <img src="images/prev.png"/>
       </div>
       <div class="photo-gallery__content">
         <div class="photo-gallery__slides-wrapper">
           <div class="photo-gallery__slides">
-            <img src="images/second_set/pic1.jpg" width="145" height="100%" class="photo-gallery__slide" data-initial-slide="true"/>
-            <img src="images/second_set/pic2.jpg" width="145" height="100%" class="photo-gallery__slide" data-initial-slide="true"/>
-            <img src="images/second_set/pic3.jpg" width="145" height="100%" class="photo-gallery__slide" data-initial-slide="true"/>
-            <img src="images/second_set/pic4.jpg" width="145" height="100%" class="photo-gallery__slide" data-initial-slide="true"/>
-            <img src="images/second_set/pic5.jpg" width="145" height="100%" class="photo-gallery__slide" data-initial-slide="true"/>
-            <img src="images/second_set/pic6.jpg" width="145" height="100%" class="photo-gallery__slide" data-initial-slide="true"/>
+            <img src="images/second_set/pic1.jpg" width="500" height="100%" class="photo-gallery__slide" data-initial-slide="true"/>
+            <img src="images/second_set/pic2.jpg" width="500" height="100%" class="photo-gallery__slide" data-initial-slide="true"/>
+            <img src="images/second_set/pic3.jpg" width="500" height="100%" class="photo-gallery__slide" data-initial-slide="true"/>
+            <img src="images/second_set/pic4.jpg" width="500" height="100%" class="photo-gallery__slide" data-initial-slide="true"/>
+            <img src="images/second_set/pic5.jpg" width="500" height="100%" class="photo-gallery__slide" data-initial-slide="true"/>
+            <img src="images/second_set/pic6.jpg" width="500" height="100%" class="photo-gallery__slide" data-initial-slide="true"/>
           </div>
         </div>
       </div>
@@ -56,7 +77,8 @@
     <script src="my_gallery.js"></script>
     <script>
       $( document ).ready(function() {
-        $('.photo-gallery').mygallery({ count: 3 });
+        $($('.photo-gallery')[0]).mygallery({ count: 3 });
+        $($('.photo-gallery')[1]).mygallery({ count: 1 });
       });
     </script>
   </body>

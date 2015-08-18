@@ -7,7 +7,7 @@ $.widget("custom.mygallery", {
   _create: function() {
     var initial = this.element.find('[data-initial-slide=true]');
 
-    this.options = $.extend( {
+    this.options = $.extend({
       nextIndex: 0,
       prevIndex: initial.length - 1,
       content: this.element.find('.photo-gallery__slides'),
@@ -93,7 +93,7 @@ $.widget("custom.mygallery", {
 
   _slideValue: function(element, next) {
     var $slide = $(element.find('.photo-gallery__slide')[0]);
-    var slideWidth = $slide.outerWidth(true)*3;
+    var slideWidth = $slide.outerWidth(true)*this.options.count;
     if (next == true) {
       return "+=" + slideWidth + "px";
     } else {
