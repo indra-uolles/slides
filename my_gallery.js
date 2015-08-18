@@ -61,11 +61,15 @@ $.widget("custom.mygallery", {
   },
 
   _updatePrevIndex: function() {
-
+    this.options.prevIndex -= this.options.count;
+    if (this.options.prevIndex < 0) {
+      this.options.prevIndex = this.options.initial.length + this.options.prevIndex;
+    }
   },
 
   _updateNextIndex: function() {
-
+    this.options.nextIndex += this.options.count;
+    this.options.nextIndex = this.options.nextIndex % this.options.initial.length;
   },
 
   _neededNextCount: function() {
