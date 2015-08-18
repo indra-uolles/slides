@@ -5,10 +5,13 @@ $.widget("custom.mygallery", {
   },
 
   _create: function() {
+    var initial = this.element.find('[data-initial-slide=true]');
+
     this.options = $.extend( {
       nextIndex: 0,
-      prevIndex: this.options.count - 1,
-      content: this.element.find('.photo-gallery__slides')
+      prevIndex: initial.length - 1,
+      content: this.element.find('.photo-gallery__slides'),
+      initial: initial
     }, this.options);
 
     this._on(this.element, {
@@ -21,10 +24,6 @@ $.widget("custom.mygallery", {
     });
   },
 
-  showNext: function() {
-    //var initialSlides = this.element.find("[data-initial-slide=true]");
-  },
-
   _slideNext: function() {
     var $content = this.options.content;
     var value = this._slideValue($content, true);
@@ -32,6 +31,7 @@ $.widget("custom.mygallery", {
     $content.animate({
       left: value
     });
+    console.log(this._neededNextCount());
   },
 
   _slidePrev: function() {
@@ -41,6 +41,23 @@ $.widget("custom.mygallery", {
     $content.animate({
       left: value
     });
+    console.log(this._neededPrevCount());
+  },
+
+  _neededNextCount: function() {
+    var given = this.options.initial.length;
+    var left = given - (this.options.nextIndex + this.options.count);
+    var needed = this.options.count - left;
+    return needed;
+  },
+
+  _neededPrevCount: function() {
+    var delta = this.options.prevIndex - this.options.count;
+    if (delta > 0) {
+      return 0;
+    } else {
+      return (this.options.prevIndex - delta);
+    }
   },
 
   _slideValue: function(element, next) {
