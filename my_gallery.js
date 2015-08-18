@@ -7,7 +7,8 @@ $.widget("custom.mygallery", {
   _create: function() {
     this.options = $.extend( {
       nextIndex: 0,
-      prevIndex: this.options.count - 1
+      prevIndex: this.options.count - 1,
+      content: this.element.find('.photo-gallery__slides')
     }, this.options);
 
     this._on(this.element, {
@@ -21,17 +22,12 @@ $.widget("custom.mygallery", {
   },
 
   showNext: function() {
-    console.log(this.options.count);
-    console.log(this.options.prevIndex);
-    this._slideNext();
     //var initialSlides = this.element.find("[data-initial-slide=true]");
   },
 
   _slideNext: function() {
-    var $content = this.element.find('.photo-gallery__slides');
-    var $slide = $($content.find('.photo-gallery__slide')[0]);
-    var slideWidth = $slide.outerWidth(true)*3;
-    var value = "-" + slideWidth + "px";
+    var $content = this.options.content;
+    var value = this._slideValue($content, true);
 
     $content.animate({
       left: value
@@ -39,13 +35,23 @@ $.widget("custom.mygallery", {
   },
 
   _slidePrev: function() {
-    var $content = this.element.find('.photo-gallery__slides');
-    var $slide = $($content.find('.photo-gallery__slide')[0]);
-    var slideWidth = $slide.outerWidth(true)*3;
-    var value = slideWidth + "px";
+    var $content = this.options.content;
+    var value = this._slideValue($content, false);
 
     $content.animate({
       left: value
     });
+  },
+
+  _slideValue: function(element, next) {
+    var left = element.css('left');
+    var initValue = (left == 'auto' ? 0 : parseInt(left.split("px")[0]));
+    var $slide = $(element.find('.photo-gallery__slide')[0]);
+    var slideWidth = $slide.outerWidth(true)*3;
+    if (next == true) {
+      return (initValue - slideWidth) + "px";
+    } else {
+      return (initValue + slideWidth) + "px";
+    }
   }
 });
