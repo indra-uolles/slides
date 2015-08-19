@@ -33,6 +33,7 @@
   position: absolute;
   top: 50%;
   left: 5px;
+  margin-top: -10px;
 }
 
 .photo-gallery__prev.is-disabled, .photo-gallery__next.is-disabled {
