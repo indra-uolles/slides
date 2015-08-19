@@ -5,13 +5,12 @@ $.widget("custom.mygallery", {
   },
 
   _create: function() {
-    var initial = this.element.find('[data-initial-slide=true]');
+    var slides = this.element.find('.photo-gallery__slides');
 
     this.options = $.extend({
       nextIndex: 0,
-      prevIndex: initial.length - 1,
-      content: this.element.find('.photo-gallery__slides'),
-      initial: initial
+      prevIndex: slides.length - 1,
+      slides: slides
     }, this.options);
 
     this._on(this.element, {
@@ -25,18 +24,16 @@ $.widget("custom.mygallery", {
   },
 
   _slideNext: function() {
-    var $content = this.options.content;
+    var $slides = this.options.slides;
 
-    var value = this._slideValue($content, true);
-    $content.closest('.photo-gallery__slides')
-      .transition({ x: value }, 1000);
+    var value = this._slideValue($slides, true);
+    $slides.transition({ x: value }, 1000);
   },
 
   _slidePrev: function() {
-    var $content = this.options.content;
-    var value = this._slideValue($content, false);
-    $content.closest('.photo-gallery__slides')
-      .transition({ x: value }, 1000);
+    var $slides = this.options.slides;
+    var value = this._slideValue($slides, false);
+    $slides.transition({ x: value }, 1000);
   },
 
   _slideValue: function(element, next) {
