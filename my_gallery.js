@@ -53,10 +53,10 @@ $.widget("custom.mygallery", {
     if (this._canSlide() == false) {
       return;
     }
-    var $slides = this.options.slides;
+    var count = this._nextSlidesCount(this.options.currentIndex);
+    var value = this._slideValue(count, true);
 
-    var value = this._slideValue($slides, true);
-    $slides.transition({ x: value }, 1000);
+    this.options.slides.transition({ x: value }, 1000);
 
     this._increaseCurrIndex();
     this._togglePrevState();
@@ -67,9 +67,10 @@ $.widget("custom.mygallery", {
     if (this._canSlide(false) == false) {
       return;
     }
-    var $slides = this.options.slides;
-    var value = this._slideValue($slides, false);
-    $slides.transition({ x: value }, 1000);
+    var count = this._nextSlidesCount(this.options.currentIndex, false);
+    var value = this._slideValue(count, false);
+    
+    this.options.slides.transition({ x: value }, 1000);
 
     this._decreaseCurrIndex();
     this._togglePrevState();
@@ -109,10 +110,54 @@ $.widget("custom.mygallery", {
     return result;
   },
 
-  _slideValue: function(element, next) {
-    var $slide = $(element.find('.photo-gallery__slide')[0]);
-    var slideWidth = $slide.outerWidth(true)*this.options.count;
-    if (next == true) {
+  _nextSlidesCount: function(index, forward) {
+    if (typeof(forward) == 'undefined') {
+      forward = true;
+    }
+    var result = 0;
+
+    if (forward == true) {
+      var delta = this._slidesLength() - this.options.currIndex - 1;
+      if (delta >= this.options.count) {
+        result = this.options.count;
+      } else {
+        result = delta;
+      }
+    } else {
+      if (this.options.currIndex + 1 > this.options.count) {
+        result = this.options.count;
+      } else {
+        result = this.options.currIndex + 1;
+      }
+    }
+
+    return result;
+  },
+
+  _slidesLength: function() {
+    return this.options.slides.find('.photo-gallery__slide').length;
+  },
+
+  _slideValue: function(count, forward) {
+    if (typeof(forward) == 'undefined') {
+      forward = true;
+    }
+    var slides = this.options.slides.find('.photo-gallery__slide'),
+        slideWidth = 0;
+
+    if (forward == true) {
+      var len = this.options.currIndex + count;
+      for (var i = this.options.currIndex; i < len; i++) {
+        slideWidth += $(slides[i]).outerWidth(true);
+      }
+    } else {
+      var len = this.options.currIndex - count;
+      for (var i = this.options.currIndex; i > len; i--) {
+        slideWidth += $(slides[i]).outerWidth(true);
+      }
+    }
+
+    if (forward == true) {
       return "-=" + slideWidth;
     } else {
       return "+=" + slideWidth;

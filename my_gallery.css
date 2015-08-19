@@ -1,15 +1,17 @@
 .photo-gallery {
-  width: 500px;
+  width: 522px;
   height: 96px;
 }
 
 .photo-gallery__content {
   display: inline-block;
-  width: 426px;
+  width: 445px;
   overflow: hidden;
 }
 .photo-gallery__slides {
   white-space: nowrap;
+  font-size: 0;
+  line-height: 0;
 }
 .photo-gallery__slide {
   display: inline-block;
