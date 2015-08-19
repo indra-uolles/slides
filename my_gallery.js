@@ -13,10 +13,10 @@ $.widget("custom.mygallery", {
     }, this.options);
 
     this._on(this.element, {
-      "click .photo-gallery__next": function( event ) {
+      "click .photo-gallery__next": function(event) {
         this._slideNext();
       },
-      "click .photo-gallery__prev": function( event ) {
+      "click .photo-gallery__prev": function(event) {
         this._slidePrev();
       },
     });
@@ -50,6 +50,9 @@ $.widget("custom.mygallery", {
   },
 
   _slideNext: function() {
+    if (this._canSlide() == false) {
+      return;
+    }
     var $slides = this.options.slides;
 
     var value = this._slideValue($slides, true);
@@ -61,6 +64,9 @@ $.widget("custom.mygallery", {
   },
 
   _slidePrev: function() {
+    if (this._canSlide(false) == false) {
+      return;
+    }
     var $slides = this.options.slides;
     var value = this._slideValue($slides, false);
     $slides.transition({ x: value }, 1000);
@@ -68,6 +74,20 @@ $.widget("custom.mygallery", {
     this._decreaseCurrIndex();
     this._togglePrevState();
     this._toggleNextState();
+  },
+
+  _canSlide: function(forward) {
+    var result = true;
+    if (typeof(forward) == 'undefined') {
+      forward = true;
+    }
+    var selector = (forward == true ? '.photo-gallery__next' : '.photo-gallery__prev');
+    var element = this.element.find(selector);
+    if (element.hasClass("is-disabled")) {
+      result = false;
+    }
+
+    return result;
   },
 
   _ifSlidesLeft: function(index, forward) {
