@@ -32,3 +32,11 @@
   top: 50%;
   left: 5px;
 }
+
+.photo-gallery__prev.is-disabled, .photo-gallery__next.is-disabled {
+  cursor: not-allowed;
+}
+
+.photo-gallery__prev.is-disabled img, .photo-gallery__next.is-disabled img {
+  opacity: 0.5;
+}
