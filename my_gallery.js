@@ -1,7 +1,7 @@
 $.widget("custom.mygallery", {
  
   options: {
-    count: 1    // Сколько картинок листать при клике на стрелки
+    count: 1 // Сколько картинок листать при клике на стрелки
   },
 
   _create: function() {
@@ -11,7 +11,7 @@ $.widget("custom.mygallery", {
       currIndex: 0,
       totalSlides: slides.find('.photo-gallery__slide').length,
       slides: slides,
-      useTransition: this._getSupportedTransform()
+      useTransition: this._isTransitionSupported()
     }, this.options);
 
     this._on(this.element, {
@@ -39,6 +39,13 @@ $.widget("custom.mygallery", {
     this._slide('prev');
   },
 
+  /**
+   * выполняет пролистывание галереи и все связанные с этим операции (пересчет текущего индекса, 
+   * начиная с которого выполняется пролистывание,
+   * дисейбл при необходимости стрелочек прокрутки вправо и влево)
+   * 
+   * @param  {"prev" | "next"}
+   */
   _slide: function(direction) {
     if (this._canSlide(direction) == false) {
       return;
@@ -56,6 +63,13 @@ $.widget("custom.mygallery", {
     this._toggleControlsStates();
   },
 
+  /**
+   * показывает, можно ли листать вправо или влево (в зависимости от того, 
+   * задисейблен ли соответствующий контрол)
+   * 
+   * @param  {"prev" | "next"}
+   * @return {Boolean}
+   */
   _canSlide: function(direction) {
     var result = true;
     var selector = (direction == 'next' ? '.photo-gallery__next' : '.photo-gallery__prev');
@@ -67,6 +81,13 @@ $.widget("custom.mygallery", {
     return result;
   },
 
+  /**
+   * показывает, можно ли листать вправо или влево (в зависимости от того,
+   * сколько впереди невидимых картинок, которые будут показаны после прокрутки)
+   * 
+   * @param  {"prev" | "next"}
+   * @return {Boolean}
+   */
   _hasSlidesLeft: function(direction) {
     var count = this._nextSlidesCount(direction);
     if (count > 0) {
@@ -88,6 +109,12 @@ $.widget("custom.mygallery", {
     return (count > this.options.count ? this.options.count : count);
   },
 
+  /**
+   * Возвращает количество картинок, на сколько можно сдвинуть в следующей итерации
+   * 
+   * @param  {"prev" | "next"}
+   * @return {Number}
+   */
   _nextSlidesCount: function(direction) {
 
     if (direction == 'prev') {
@@ -98,6 +125,14 @@ $.widget("custom.mygallery", {
 
   },
 
+  /**
+   * Возвращает относительное значение для эффекта пролистывания, например: '+=450px'
+   * или: '-=380px'
+   * 
+   * @param  {Number}
+   * @param  {"prev" | "next"}
+   * @return {String}
+   */
   _slideValue: function(count, direction) {
     var slides = this.options.slides.find('.photo-gallery__slide'),
         slideWidth = 0,
@@ -131,8 +166,12 @@ $.widget("custom.mygallery", {
     }
   },
 
-  _getSupportedTransform: function() {
-    var prefixes = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' ');
+  /**
+   * показывает, поддерживается ли свойство transition браузером
+   * @return {Boolean}
+   */
+  _isTransitionSupported: function() {
+    var prefixes = 'transition WebkitTransition MozTransition OTransition msTransition'.split(' ');
     var div = document.createElement('div');
     for (var i = 0; i < prefixes.length; i++) {
         if (div && div.style[prefixes[i]] !== undefined) {
@@ -142,6 +181,9 @@ $.widget("custom.mygallery", {
     return false;
   },
 
+  /**
+   * дисейблит стрелочку листания вправо, если справа нет картинок для листания
+   */
   _toggleNextState: function() {
     var index = this.options.currIndex + this.options.count,
         left  = this._hasSlidesLeft('next'),
@@ -154,6 +196,9 @@ $.widget("custom.mygallery", {
     }
   },
 
+  /**
+   * дисейблит стрелочку листания влево, если слева нет картинок для листания
+   */
   _togglePrevState: function() {
     var index = this.options.currIndex - 1,
         left  = this._hasSlidesLeft('prev'),
@@ -166,6 +211,12 @@ $.widget("custom.mygallery", {
     }
   },
 
+  /**
+   * обновляет индекс, начиная с которого галерея пролистывается вправо или влево
+   * 
+   * @param  {Number}
+   * @param  {"prev" | "next"}
+   */
   _updateCurrIndex: function(count, direction) {
     if (direction == 'next') {
       this.options.currIndex += count;
