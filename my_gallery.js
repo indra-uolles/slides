@@ -53,7 +53,7 @@ $.widget("custom.mygallery", {
     if (this._canSlide() == false) {
       return;
     }
-    var count = this._nextSlidesCount(this.options.currentIndex);
+    var count = this._nextSlidesCount(this.options.currIndex);
     var value = this._slideValue(count, true);
 
     this.options.slides.transition({ x: value }, 1000);
@@ -67,7 +67,7 @@ $.widget("custom.mygallery", {
     if (this._canSlide(false) == false) {
       return;
     }
-    var count = this._nextSlidesCount(this.options.currentIndex, false);
+    var count = this._nextSlidesCount(this.options.currIndex, false);
     var value = this._slideValue(count, false);
     
     this.options.slides.transition({ x: value }, 1000);
@@ -114,21 +114,19 @@ $.widget("custom.mygallery", {
     if (typeof(forward) == 'undefined') {
       forward = true;
     }
-    var result = 0;
+    var result = 0,
+        delta = 0;
 
     if (forward == true) {
-      var delta = this._slidesLength() - this.options.currIndex - this.options.count;
-      if (delta >= this.options.count) {
-        result = this.options.count;
-      } else {
-        result = delta;
-      }
+      delta = this._slidesLength() - this.options.currIndex - this.options.count;
     } else {
-      if (this.options.currIndex + 1 > this.options.count) {
-        result = this.options.currIndex + 1 - this.options.count;
-      } else {
-        result = this.options.currIndex + 1;
-      }
+      delta = this.options.currIndex + 1 - this.options.count;
+    }
+
+    if (delta >= this.options.count) {
+      result = this.options.count;
+    } else {
+      result = delta;
     }
 
     return result;
