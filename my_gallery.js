@@ -10,7 +10,8 @@ $.widget("custom.mygallery", {
     this.options = $.extend({
       currIndex: 0,
       totalSlides: slides.find('.photo-gallery__slide').length,
-      slides: slides
+      slides: slides,
+      useTransition: this._getSupportedTransform()
     }, this.options);
 
     this._on(this.element, {
@@ -31,28 +32,27 @@ $.widget("custom.mygallery", {
   },
 
   _slideNext: function() {
-    if (this._canSlide('next') == false) {
-      return;
-    }
-    var count = this._willSlideCount('next');
-    var value = this._slideValue(count, true);
-
-    this.options.slides.animate({ marginLeft: value }, 300);
-
-    this._increaseCurrIndex(count);
-    this._toggleControlsStates();
+    this._slide('next');
   },
 
   _slidePrev: function() {
-    if (this._canSlide('prev') == false) {
+    this._slide('prev');
+  },
+
+  _slide: function(direction) {
+    if (this._canSlide(direction) == false) {
       return;
     }
-    var count = this._willSlideCount('prev');
-    var value = this._slideValue(count, false);
+    var count = this._willSlideCount(direction);
+    var value = this._slideValue(count, direction);
     
-    this.options.slides.animate({ marginLeft: value }, 1000);
+    if (this.options.useTransition) {
+      this.options.slides.transition({ x: value }, 300);
+    } else {
+      this.options.slides.animate({ marginLeft: value }, 300);
+    }
 
-    this._decreaseCurrIndex(count);
+    this._updateCurrIndex(count, direction);
     this._toggleControlsStates();
   },
 
@@ -98,16 +98,13 @@ $.widget("custom.mygallery", {
 
   },
 
-  _slideValue: function(count, forward) {
-    if (typeof(forward) == 'undefined') {
-      forward = true;
-    }
+  _slideValue: function(count, direction) {
     var slides = this.options.slides.find('.photo-gallery__slide'),
         slideWidth = 0,
         start = 0,
         len = 0;
 
-    if (forward == true) {
+    if (direction == 'next') {
       if (count < this.options.count) {
         start = this.options.currIndex + this.options.count;
       } else {
@@ -127,11 +124,22 @@ $.widget("custom.mygallery", {
       }
     }
 
-    if (forward == true) {
+    if (direction == 'next') {
       return "-=" + slideWidth;
     } else {
       return "+=" + slideWidth;
     }
+  },
+
+  _getSupportedTransform: function() {
+    var prefixes = 'transform WebkitTransform MozTransform OTransform msTransform'.split(' ');
+    var div = document.createElement('div');
+    for (var i = 0; i < prefixes.length; i++) {
+        if (div && div.style[prefixes[i]] !== undefined) {
+            return true;
+        }
+    }
+    return false;
   },
 
   _toggleNextState: function() {
@@ -158,11 +166,11 @@ $.widget("custom.mygallery", {
     }
   },
 
-  _increaseCurrIndex: function(count) {
-    this.options.currIndex += count;
-   },
-
-  _decreaseCurrIndex: function(count) {
-    this.options.currIndex -= count;
+  _updateCurrIndex: function(count, direction) {
+    if (direction == 'next') {
+      this.options.currIndex += count;
+    } else {
+      this.options.currIndex -= count;
+    }
   }
 });
