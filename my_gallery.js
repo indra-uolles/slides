@@ -22,32 +22,12 @@ $.widget("custom.mygallery", {
       },
     });
 
+    this._toggleControlsStates();
+  },
+
+  _toggleControlsStates: function() {
     this._togglePrevState();
     this._toggleNextState();
-  },
-
-  _toggleNextState: function() {
-    var index = this.options.currIndex + this.options.count,
-        left  = this._hasSlidesLeft('next'),
-        element = this.element.find('.photo-gallery__next');
-
-    if (left == false) {
-      element.addClass('is-disabled');
-    } else {
-      element.removeClass('is-disabled');
-    }
-  },
-
-  _togglePrevState: function() {
-    var index = this.options.currIndex - 1,
-        left  = this._hasSlidesLeft('prev'),
-        element = this.element.find('.photo-gallery__prev');
-
-    if (left == false) {
-      element.addClass('is-disabled');
-    } else {
-      element.removeClass('is-disabled');
-    }
   },
 
   _slideNext: function() {
@@ -57,11 +37,10 @@ $.widget("custom.mygallery", {
     var count = this._willSlideCount('next');
     var value = this._slideValue(count, true);
 
-    this.options.slides.transition({ x: value }, 1000);
+    this.options.slides.animate({ marginLeft: value }, 300);
 
     this._increaseCurrIndex(count);
-    this._togglePrevState();
-    this._toggleNextState();
+    this._toggleControlsStates();
   },
 
   _slidePrev: function() {
@@ -71,11 +50,10 @@ $.widget("custom.mygallery", {
     var count = this._willSlideCount('prev');
     var value = this._slideValue(count, false);
     
-    this.options.slides.transition({ x: value }, 1000);
+    this.options.slides.animate({ marginLeft: value }, 1000);
 
     this._decreaseCurrIndex(count);
-    this._togglePrevState();
-    this._toggleNextState();
+    this._toggleControlsStates();
   },
 
   _canSlide: function(direction) {
@@ -153,6 +131,30 @@ $.widget("custom.mygallery", {
       return "-=" + slideWidth;
     } else {
       return "+=" + slideWidth;
+    }
+  },
+
+  _toggleNextState: function() {
+    var index = this.options.currIndex + this.options.count,
+        left  = this._hasSlidesLeft('next'),
+        element = this.element.find('.photo-gallery__next');
+
+    if (left == false) {
+      element.addClass('is-disabled');
+    } else {
+      element.removeClass('is-disabled');
+    }
+  },
+
+  _togglePrevState: function() {
+    var index = this.options.currIndex - 1,
+        left  = this._hasSlidesLeft('prev'),
+        element = this.element.find('.photo-gallery__prev');
+
+    if (left == false) {
+      element.addClass('is-disabled');
+    } else {
+      element.removeClass('is-disabled');
     }
   },
 

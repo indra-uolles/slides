@@ -37,7 +37,7 @@
 }
 
 .photo-gallery__prev.is-disabled, .photo-gallery__next.is-disabled {
-  cursor: not-allowed;
+  cursor: auto;
 }
 
 .photo-gallery__prev.is-disabled img, .photo-gallery__next.is-disabled img {
