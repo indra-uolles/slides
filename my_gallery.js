@@ -1,7 +1,7 @@
 $.widget("custom.mygallery", {
  
   options: {
-    count: 1
+    count: 1    // Сколько картинок листать при клике на стрелки
   },
 
   _create: function() {
@@ -9,6 +9,7 @@ $.widget("custom.mygallery", {
 
     this.options = $.extend({
       currIndex: 0,
+      totalSlides: slides.find('.photo-gallery__slide').length,
       slides: slides
     }, this.options);
 
@@ -27,7 +28,7 @@ $.widget("custom.mygallery", {
 
   _toggleNextState: function() {
     var index = this.options.currIndex + this.options.count,
-        left  = this._ifSlidesLeft(index),
+        left  = this._hasSlidesLeft('next'),
         element = this.element.find('.photo-gallery__next');
 
     if (left == false) {
@@ -38,8 +39,8 @@ $.widget("custom.mygallery", {
   },
 
   _togglePrevState: function() {
-    var index = this.options.currIndex - this.options.count,
-        left  = this._ifSlidesLeft(index, false),
+    var index = this.options.currIndex - 1,
+        left  = this._hasSlidesLeft('prev'),
         element = this.element.find('.photo-gallery__prev');
 
     if (left == false) {
@@ -50,39 +51,36 @@ $.widget("custom.mygallery", {
   },
 
   _slideNext: function() {
-    if (this._canSlide() == false) {
+    if (this._canSlide('next') == false) {
       return;
     }
-    var count = this._nextSlidesCount(this.options.currIndex);
+    var count = this._willSlideCount('next');
     var value = this._slideValue(count, true);
 
     this.options.slides.transition({ x: value }, 1000);
 
-    this._increaseCurrIndex();
+    this._increaseCurrIndex(count);
     this._togglePrevState();
     this._toggleNextState();
   },
 
   _slidePrev: function() {
-    if (this._canSlide(false) == false) {
+    if (this._canSlide('prev') == false) {
       return;
     }
-    var count = this._nextSlidesCount(this.options.currIndex, false);
+    var count = this._willSlideCount('prev');
     var value = this._slideValue(count, false);
     
     this.options.slides.transition({ x: value }, 1000);
 
-    this._decreaseCurrIndex();
+    this._decreaseCurrIndex(count);
     this._togglePrevState();
     this._toggleNextState();
   },
 
-  _canSlide: function(forward) {
+  _canSlide: function(direction) {
     var result = true;
-    if (typeof(forward) == 'undefined') {
-      forward = true;
-    }
-    var selector = (forward == true ? '.photo-gallery__next' : '.photo-gallery__prev');
+    var selector = (direction == 'next' ? '.photo-gallery__next' : '.photo-gallery__prev');
     var element = this.element.find(selector);
     if (element.hasClass("is-disabled")) {
       result = false;
@@ -91,49 +89,35 @@ $.widget("custom.mygallery", {
     return result;
   },
 
-  _ifSlidesLeft: function(index, forward) {
-    if (typeof(forward) == 'undefined') {
-      forward = true;
-    }
-    var result = false;
-
-    if (forward == true) {
-      left = this.options.slides.find('.photo-gallery__slide').length - index;
+  _hasSlidesLeft: function(direction) {
+    var count = this._nextSlidesCount(direction);
+    if (count > 0) {
+      return true;
     } else {
-      left = index;
+      return false;
     }
-
-    if ((forward == true && left > 0) || (forward == false && left >= 0)) {
-      result = true;
-    }
-
-    return result;
   },
 
-  _nextSlidesCount: function(index, forward) {
-    if (typeof(forward) == 'undefined') {
-      forward = true;
-    }
-    var result = 0,
-        delta = 0;
-
-    if (forward == true) {
-      delta = this._slidesLength() - this.options.currIndex - this.options.count;
-    } else {
-      delta = this.options.currIndex + 1 - this.options.count;
-    }
-
-    if (delta >= this.options.count) {
-      result = this.options.count;
-    } else {
-      result = delta;
-    }
-
-    return result;
+  /**
+   * Возвращает количество картинок, на которые будем сдвигать 
+   * с учётом настроек и имеющихся ограничений
+   * 
+   * @param  {"prev" | "next"} 
+   * @return {Number}
+   */
+  _willSlideCount: function(direction) {
+    var count = this._nextSlidesCount(direction);
+    return (count > this.options.count ? this.options.count : count);
   },
 
-  _slidesLength: function() {
-    return this.options.slides.find('.photo-gallery__slide').length;
+  _nextSlidesCount: function(direction) {
+
+    if (direction == 'prev') {
+      return this.options.currIndex;
+    } else {
+      return this.options.totalSlides - this.options.currIndex - this.options.count;
+    }
+
   },
 
   _slideValue: function(count, forward) {
@@ -172,11 +156,11 @@ $.widget("custom.mygallery", {
     }
   },
 
-  _increaseCurrIndex: function() {
-    this.options.currIndex += this.options.count;
+  _increaseCurrIndex: function(count) {
+    this.options.currIndex += count;
    },
 
-  _decreaseCurrIndex: function() {
-    this.options.currIndex -= this.options.count;
+  _decreaseCurrIndex: function(count) {
+    this.options.currIndex -= count;
   }
 });
